@@ -1,4 +1,4 @@
-"""receive OpenCV stream using PUB SUB."""
+#!/usr/bin/env python3
 
 import sys
 import configparser
@@ -49,8 +49,10 @@ def limit_to_2_fps():
 
 
 def main():
+    config_path = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.dirname(config_path)
     config = configparser.ConfigParser()
-    config.read("config.ini")
+    config.read(f"{config_path}/config.ini")
 
     hostname = config['Camera']['hostName']
     port = config['Camera']['hostName']

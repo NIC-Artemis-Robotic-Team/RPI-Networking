@@ -1,6 +1,7 @@
-"""broadcast OpenCV stream using PUB SUB."""
+#!/usr/bin/env python3
 
 import sys
+import os
 import configparser
 import socket
 import traceback
@@ -10,8 +11,10 @@ from imutils.video import VideoStream
 import imagezmq
 
 def main():
+    config_path = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.dirname(config_path)
     config = configparser.ConfigParser()
-    config.read("config.ini")
+    config.read(f"{config_path}/config.ini")
 
     port = int(config['Camera']['portNumber'])
 
