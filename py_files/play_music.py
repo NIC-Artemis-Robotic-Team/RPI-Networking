@@ -12,8 +12,4 @@ volume = config['Audio']['volume']
 fileName = config_path + "/" + fileName
 
 print(f"Playing {fileName}...")
-
-try:
-    subprocess.run(f"ffplay -loop 0 -volume {volume} -nodisp {fileName}".split(" "), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-except KeyboardInterrupt:
-    print(f"Done playing {fileName}!")
+subprocess.run(f"ffplay -loop 0 -volume {volume} -nodisp {fileName}".split(" "))
