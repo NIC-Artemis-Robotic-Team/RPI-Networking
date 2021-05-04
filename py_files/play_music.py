@@ -9,11 +9,16 @@ config = configparser.ConfigParser()
 config.read(f"{config_path}/config.ini")
 fileName = config['Audio']['fileName']
 volume = config['Audio']['volume']
+macAddr = config['Audio']['macAddr']
+
 fileName = config_path + "/" + fileName
 
-print(f"Playing {fileName}...")
+print(f"Connecting to {macAddr}...")
+subprocess.run(f"bluetoothctl connect {macAddr}".split(" "), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-try:
-    subprocess.run(f"ffplay -loop 0 -volume {volume} -nodisp {fileName}".split(" "), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-except KeyboardInterrupt:
-    print(f"Done playing {fileName}!")
+print(f"Playing {fileName}...")
+while True:
+    try:
+        subprocess.run(f"aplay -D={macAddr} {fileName}".split(" "), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except KeyboardInterrupt:
+        print(f"Done playing {fileName}!")

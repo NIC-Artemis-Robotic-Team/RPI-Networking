@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
+import sys, os
 import configparser
 import socket
 import traceback
@@ -41,12 +41,22 @@ class VideoStreamSubscriber:
     def close(self):
         self._stop = True
 
-
 # Simulating heavy processing load
-def limit_to_2_fps():
-    sleep(0.5)
 
+def ResizeWithAspectRatio(image, width=None, height=None, inter=cv2.INTER_AREA):
+    dim = None
+    (h, w) = image.shape[:2]
 
+    if width is None and height is None:
+        return image
+    if width is None:
+        r = height / float(h)
+        dim = (int(w * r), height)
+    else:
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    return cv2.resize(image, dim, interpolation=inter)
 
 def main():
     config_path = os.path.dirname(os.path.abspath(__file__))
@@ -55,7 +65,7 @@ def main():
     config.read(f"{config_path}/config.ini")
 
     hostname = config['Camera']['hostName']
-    port = config['Camera']['hostName']
+    port = config['Camera']['portNumber']
     receiver = VideoStreamSubscriber(hostname, port)
 
     try:
@@ -64,9 +74,8 @@ def main():
             image = cv2.imdecode(np.frombuffer(frame, dtype='uint8'), -1)
             image = cv2.flip(image, 0)
 
-            # limit_to_2_fps()   # Comment this statement out to run full speeed
-
-            cv2.imshow("Pub Sub Receive", image)
+            image = ResizeWithAspectRatio(image, 1000)
+            cv2.imshow("LAUNCHPAD_MCQUACK_CAMERA", image)
             cv2.waitKey(1)
     except (KeyboardInterrupt, SystemExit):
         print('Exit due to keyboard interrupt')
