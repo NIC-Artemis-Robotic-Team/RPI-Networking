@@ -41,8 +41,6 @@ class VideoStreamSubscriber:
     def close(self):
         self._stop = True
 
-# Simulating heavy processing load
-
 def ResizeWithAspectRatio(image, width=None, height=None, inter=cv2.INTER_AREA):
     dim = None
     (h, w) = image.shape[:2]
@@ -86,7 +84,6 @@ def main():
     finally:
         receiver.close()
         sys.exit()
-
 
 if __name__ == "__main__":
     main()
